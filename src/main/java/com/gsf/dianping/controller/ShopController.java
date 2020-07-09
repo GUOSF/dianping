@@ -8,6 +8,7 @@ import com.gsf.dianping.model.CategoryModel;
 import com.gsf.dianping.model.ShopModel;
 import com.gsf.dianping.service.CategoryService;
 import com.gsf.dianping.service.ShopService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Controller("/shop")
 @RequestMapping("/shop")
+@Slf4j
 public class ShopController {
 
     @Autowired
@@ -33,13 +35,13 @@ public class ShopController {
     //推荐服务V1.0
     @RequestMapping("/recommend")
     @ResponseBody
-    public CommonRes recommend(@RequestParam(name="longitude")BigDecimal longitude,
-                               @RequestParam(name="latitude")BigDecimal latitude) throws BusinessException {
-        if(longitude == null || latitude == null){
+    public CommonRes recommend(@RequestParam(name = "longitude") BigDecimal longitude,
+                               @RequestParam(name = "latitude") BigDecimal latitude) throws BusinessException {
+        if (longitude == null || latitude == null) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
 
-        List<ShopModel> shopModelList = shopService.recommend(longitude,latitude);
+        List<ShopModel> shopModelList = shopService.recommend(longitude, latitude);
         return CommonRes.create(shopModelList);
     }
 
@@ -47,28 +49,26 @@ public class ShopController {
     //搜索服务V1.0
     @RequestMapping("/search")
     @ResponseBody
-    public CommonRes search(@RequestParam(name="longitude")BigDecimal longitude,
-                            @RequestParam(name="latitude")BigDecimal latitude,
-                            @RequestParam(name="keyword")String keyword,
-                            @RequestParam(name="orderby",required = false)Integer orderby,
-                            @RequestParam(name="categoryId",required = false)Integer categoryId,
-                            @RequestParam(name="tags",required = false)String tags) throws BusinessException {
-        if(StringUtils.isEmpty(keyword) || longitude == null || latitude == null){
+    public CommonRes search(@RequestParam(name = "longitude") BigDecimal longitude,
+                            @RequestParam(name = "latitude") BigDecimal latitude,
+                            @RequestParam(name = "keyword") String keyword,
+                            @RequestParam(name = "orderby", required = false) Integer orderby,
+                            @RequestParam(name = "categoryId", required = false) Integer categoryId,
+                            @RequestParam(name = "tags", required = false) String tags) throws BusinessException {
+        if (StringUtils.isEmpty(keyword) || longitude == null || latitude == null) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-
-        List<ShopModel> shopModelList = shopService.search(longitude,latitude,keyword,orderby,categoryId,tags);
+        log.info("search 参数 ：keyword:{} {} {} {} {} {}", keyword, longitude, longitude, latitude, orderby, categoryId);
+        List<ShopModel> shopModelList = shopService.search(longitude, latitude, keyword, orderby, categoryId, tags);
         List<CategoryModel> categoryModelList = categoryService.selectAll();
-        List<Map<String,Object>> tagsAggregation = shopService.searchGroupByTags(keyword,categoryId,tags);
-        Map<String,Object> resMap = new HashMap<>();
-        resMap.put("shop",shopModelList);
-        resMap.put("category",categoryModelList);
-        resMap.put("tags",tagsAggregation);
+        List<Map<String, Object>> tagsAggregation = shopService.searchGroupByTags(keyword, categoryId, tags);
+        Map<String, Object> resMap = new HashMap<>();
+        resMap.put("shop", shopModelList);
+        resMap.put("category", categoryModelList);
+        resMap.put("tags", tagsAggregation);
         return CommonRes.create(resMap);
 
     }
-
-
 
 
 }
