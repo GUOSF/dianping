@@ -23,8 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@RestController("/admin/admin")
-
+@RestController()
+@RequestMapping("/admin/admin")
 public class AdminController {
 
     @Value("${admin.email}")

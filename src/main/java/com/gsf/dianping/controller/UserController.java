@@ -6,6 +6,8 @@ import com.gsf.dianping.common.CommonRes;
 import com.gsf.dianping.common.CommonUtil;
 import com.gsf.dianping.common.EmBusinessError;
 import com.gsf.dianping.model.UserModel;
+import com.gsf.dianping.request.LoginReq;
+import com.gsf.dianping.request.RegisterReq;
 import com.gsf.dianping.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -20,7 +22,8 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
-@RestController("/user")
+@RestController()
+@RequestMapping("/user")
 public class UserController {
 
     public static final String CURRENT_USER_SESSION = "currentUserSession";
@@ -76,7 +79,7 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public CommonRes login(@RequestBody @Valid LoginReq loginReq,BindingResult bindingResult) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public CommonRes login(@RequestBody @Valid LoginReq loginReq, BindingResult bindingResult) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         if(bindingResult.hasErrors()){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,CommonUtil.processErrorString(bindingResult));
         }

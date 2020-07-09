@@ -1,6 +1,7 @@
 package com.gsf.dianping.common;
 
 
+import com.gsf.dianping.controller.admin.AdminController;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,7 +23,7 @@ public class ControllerAspect {
     @Autowired
     private HttpServletResponse httpServletResponse;
 
-    @Around("execution(* com.imooc.dianping.controller.admin.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    @Around("execution(* com.gsf.dianping.controller.admin.*.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object adminControllerBeforeValidation(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();
         AdminPermission adminPermission = method.getAnnotation(AdminPermission.class);
